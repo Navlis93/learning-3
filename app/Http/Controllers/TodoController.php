@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Todoitem;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Gate;
 
 class TodoController extends Controller
 {
@@ -28,7 +29,7 @@ class TodoController extends Controller
         }
         $validated = $validator->validated();
         Todoitem::create([
-            'text' => $validated->text,
+            'text' => $validated['text'],
             'status' => 0,
             'user_id' => Auth::user()->id
         ]);
@@ -40,6 +41,10 @@ class TodoController extends Controller
     public function view(Request $request, $id)
     {
         $item = Todoitem::find($id);
+        // if ($request->user()->cannot('view', $item)) {
+        //     abort(403);
+        // }
+        Gate::authorize('view', $item);
         return view('todo.view', ['item' => $item]);
     }
 
@@ -50,6 +55,10 @@ class TodoController extends Controller
             'status' => ['boolean']
         ]);
         $item = Todoitem::find($id);
+        Gate::authorize('update-todo', $item);
+        // if (!Gate::allows('update-todo', $item)) {
+        //     abort(403);
+        // }
         $item->text = $request->text;
         $item->status = $request->status ?? 0;
         $item->save();
