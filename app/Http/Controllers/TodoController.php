@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Todoitem;
+use App\Models\Tag;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Gate;
@@ -12,7 +13,8 @@ class TodoController extends Controller
 {
     public function index(Request $request)
     {
-        $items = Todoitem::where('user_id', Auth::user()->id)->get();
+        //$items = Auth::user()->items()->get();
+        $items = Auth::user()->items;
         return view('todo.index', ['todoitems' => $items]);
     }
 
@@ -45,14 +47,17 @@ class TodoController extends Controller
         //     abort(403);
         // }
         Gate::authorize('view', $item);
-        return view('todo.view', ['item' => $item]);
+        $tags = Tag::all();
+
+        return view('todo.view', ['item' => $item, 'tags' => $tags]);
     }
 
     public function update(Request $request, $id)
     {
         $request->validate([
             'text' => ['required'],
-            'status' => ['boolean']
+            'status' => ['boolean'],
+            'tags' =>  ['array']
         ]);
         $item = Todoitem::find($id);
         Gate::authorize('update-todo', $item);
@@ -61,6 +66,9 @@ class TodoController extends Controller
         // }
         $item->text = $request->text;
         $item->status = $request->status ?? 0;
+
+        $item->tags()->sync($request->tags);
+
         $item->save();
 
         return redirect('dashboard'); 

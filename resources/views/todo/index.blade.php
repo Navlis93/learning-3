@@ -24,12 +24,19 @@
                     </form>
 
                     <hr>
-
+                    <table class="border-collapse border-slate-400">
+                        <tbody>
                     @foreach($todoitems as $item)
-                    <p>
-                        {{$item->text}} <a href="{{ route('todo.view', ['id' => $item->id]) }}">Подробнее</a>
-                    </p>
+                    
+                            <tr>
+                                <td class="border border-slate-300">{{$item->text}}</td>
+                                <td class="border border-slate-300">{{$item->tags->sortBy('id')->implode('name', ', ')}}</td>
+                                <td class="border border-slate-300"><a href="{{ route('todo.view', ['id' => $item->id]) }}">Подробнее</a></td>
+                            </tr>
+                        
                     @endforeach
+                    </tbody>
+                    </table>
                 </div>
             </div>
         </div>
