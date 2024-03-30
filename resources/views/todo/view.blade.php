@@ -10,7 +10,7 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg " style="padding: 25px">
                 <div class="">
                     
-                    <form method="POST" action="{{ route('todo.update', ['id' => $item->id]) }}">
+                    <form method="POST" action="{{ route('todo.update', ['id' => $item->id]) }}" enctype="multipart/form-data">
                         @csrf
                         <div class="col-span-full">
                             <div>
@@ -27,6 +27,14 @@
                             </div>
                         </div>
                         <hr>
+                       
+                        <div>
+                            <x-input-label for="file" :value="__('Attach file')" />
+                            <input id="file" class="block mt-1 w-full" name="file"  type="file"  />
+                            <x-input-error :messages="$errors->get('file')" class="mt-2" />
+                        </div>
+                        
+                        <hr>
 
                         <div>
                             <x-input-label for="tags[]" :value="_('Tags')" />
@@ -38,8 +46,15 @@
                         <x-primary-button class="ms-4">Save</x-primary-button>
                         </div>
                     </form>
-                    
-                    <hr>
+                    @if($item->filename)
+                    <img src="{{ route('todo.viewImage', ['id' => $item->id]) }}?t={{$item->filename}}">
+                    <form method="POST" action="{{ route('todo.deleteImage', ['id' => $item->id]) }}">
+                        @csrf
+                        <div class="mt-6 flex items-center justify-end gap-x-6">
+                        <x-primary-button class="ms-4">Delete image</x-primary-button>
+                        </div>
+                    </form>
+                    @endif
 
                    
                 </div>

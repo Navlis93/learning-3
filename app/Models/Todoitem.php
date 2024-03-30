@@ -11,7 +11,7 @@ class Todoitem extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['text', 'status', 'user_id'];
+    protected $fillable = ['text', 'status', 'user_id', 'filename'];
 
     protected $table = 'todoitems';
 
