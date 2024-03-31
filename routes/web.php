@@ -13,7 +13,7 @@ Route::get('/dashboard', [TodoController::class, 'index'])->middleware(['auth', 
 Route::post('/create', [TodoController::class, 'create'])->middleware(['auth', 'verified'])->name('todo.store');
 
 Route::get('/view/{id}', [TodoController::class, 'view'])->middleware(['auth', 'verified'])->name('todo.view');
-Route::get('/view/image/{id}', [TodoController::class, 'viewImage'])->middleware(['auth', 'verified'])->name('todo.viewImage');
+Route::get('/view/image/{media}', [TodoController::class, 'viewImage'])->middleware(['auth', 'verified'])->name('todo.viewImage');
 Route::post('/view/image/{id}', [TodoController::class, 'deleteImage'])->middleware(['auth', 'verified'])->name('todo.deleteImage');
 Route::post('/view/{id}', [TodoController::class, 'update'])->middleware(['auth', 'verified'])->name('todo.update');
 

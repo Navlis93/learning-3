@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rules\File;
 use Illuminate\Support\Facades\Storage;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class TodoController extends Controller
 {
@@ -24,7 +25,7 @@ class TodoController extends Controller
     {   
         $validator = Validator::make($request->all(), [
             'text' => 'required|min:8',
-            'file' => [File::image()->max(2*1024)]
+            'files.*' => [File::image()->max(2*1024)]
         ]);
  
         if ($validator->fails()) {
@@ -33,14 +34,16 @@ class TodoController extends Controller
                         ->withInput();
         }
         $validated = $validator->validated();
-        $path = $request->file('file') ? $request->file('file')->store('todos') : '';
         
-        Todoitem::create([
+        $item = Todoitem::create([
             'text' => $validated['text'],
             'status' => 0,
             'user_id' => Auth::user()->id,
-            'filename' => $path
+            'filename' => ''
         ]);
+        foreach($request->file('files') as $file) {
+            $item->addMedia($file)->toMediaCollection('images');
+        }
 
         return redirect('dashboard');
 
@@ -51,17 +54,14 @@ class TodoController extends Controller
         $item = Todoitem::find($id);
         Gate::authorize('view', $item);
         $tags = Tag::all();
+        $media = $item->getMedia('images');
 
-        return view('todo.view', ['item' => $item, 'tags' => $tags]);
+        return view('todo.view', ['item' => $item, 'tags' => $tags, 'media' => $media]);
     }
 
-    public function viewImage(Request $request, $id)
+    public function viewImage(Request $request, Media $media)
     {
-        $item = Todoitem::find($id);
-        Gate::authorize('view', $item);
-
-        return response()->file(storage_path('app/'.$item->filename));
-
+        return $media->toInlineResponse($request);
     }
 
     public function deleteImage(Request $request, $id)

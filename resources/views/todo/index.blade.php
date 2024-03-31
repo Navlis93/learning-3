@@ -20,9 +20,9 @@
                         </div>
                         <div class="col-span-full">
                         <div>
-                            <x-input-label for="file" :value="__('Attach file')" />
-                            <input id="file" class="block mt-1 w-full" name="file"  type="file"  />
-                            <x-input-error :messages="$errors->get('file')" class="mt-2" />
+                            <x-input-label for="files" :value="__('Attach file')" />
+                            <input id="files" class="block mt-1 w-full" name="files[]"  type="file" multiple />
+                            <x-input-error :messages="$errors->get('files[]')" class="mt-2" />
                         </div>
                         </div>
                         <div class="mt-6 flex items-center justify-end gap-x-6">

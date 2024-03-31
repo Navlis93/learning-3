@@ -46,15 +46,9 @@
                         <x-primary-button class="ms-4">Save</x-primary-button>
                         </div>
                     </form>
-                    @if($item->filename)
-                    <img src="{{ route('todo.viewImage', ['id' => $item->id]) }}?t={{$item->filename}}">
-                    <form method="POST" action="{{ route('todo.deleteImage', ['id' => $item->id]) }}">
-                        @csrf
-                        <div class="mt-6 flex items-center justify-end gap-x-6">
-                        <x-primary-button class="ms-4">Delete image</x-primary-button>
-                        </div>
-                    </form>
-                    @endif
+                    @foreach($media as $mediaItem)
+                    <img src="/view/image/{{ $mediaItem->id }}">
+                    @endforeach
 
                    
                 </div>
