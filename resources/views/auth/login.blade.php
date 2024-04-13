@@ -44,4 +44,5 @@
             </x-primary-button>
         </div>
     </form>
+    <a class="ms-4" href="{{ route('vkauth') }}">{{ __('Войти через ВК') }}</a>
 </x-guest-layout>

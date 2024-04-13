@@ -2,12 +2,17 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TodoController;
+use App\Http\Controllers\VkController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\IsAdminMiddleware;
 
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/vk-auth', [VkController::class, 'index'])->name('vkauth');
+Route::get('/checkVk', [VkController::class, 'check']);
+
 
 Route::get('/dashboard', [TodoController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 Route::post('/create', [TodoController::class, 'create'])->middleware(['auth', 'verified'])->name('todo.store');

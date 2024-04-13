@@ -41,8 +41,10 @@ class TodoController extends Controller
             'user_id' => Auth::user()->id,
             'filename' => ''
         ]);
-        foreach($request->file('files') as $file) {
-            $item->addMedia($file)->toMediaCollection('images');
+        if ($request->file('files')) {
+            foreach($request->file('files') as $file) {
+                $item->addMedia($file)->toMediaCollection('images');
+            }
         }
 
         return redirect('dashboard');

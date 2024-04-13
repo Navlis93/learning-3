@@ -31,4 +31,8 @@ return [
         ],
     ],
 
+    'vk' => [
+        'service_token' => env('VK_SERVICE_TOKEN')
+    ],
+
 ];
